@@ -46,7 +46,6 @@ func BucketsAllElement(context *gin.Context) {
 	}
 
 	buckets, err := minioClient.ListBuckets(context)
-
 	if err != nil {
 		config.Log.Info("List Buckets Error :%v", err)
 		context.JSON(500, gin.H{
@@ -55,16 +54,19 @@ func BucketsAllElement(context *gin.Context) {
 		return
 	}
 
-	var img []minio.ObjectInfo
 	var doc []minio.ObjectInfo
 	var oth []minio.ObjectInfo
 	var vid []minio.ObjectInfo
+	var img []minio.ObjectInfo
+	var imgSize int64 = 0
+	var docSize int64 = 0
+	var othSize int64 = 0
+	var vidSize int64 = 0
 
 	bucketsList := list.NewList(buckets)
-
 	bucketsInfoArray := make([]BucketInfo, len(buckets))
-
 	sum := 0
+
 	bucketsList.ForEach(func(info minio.BucketInfo) {
 		objects := minioClient.ListObjects(context, info.Name, minio.ListObjectsOptions{
 			Recursive: true,
@@ -84,12 +86,16 @@ func BucketsAllElement(context *gin.Context) {
 			if config.TypeMap.GetFileType(t) != nil {
 				if config.TypeMap.GetFileType(t) == config.ImageType {
 					img = append(img, object)
+					imgSize += object.Size
 				} else if config.TypeMap.GetFileType(t) == config.VideoType {
 					vid = append(vid, object)
+					vidSize += object.Size
 				} else if config.TypeMap.GetFileType(t) == config.DocumentType {
 					doc = append(doc, object)
+					docSize += object.Size
 				} else if config.TypeMap.GetFileType(t) == config.OtherType {
 					oth = append(oth, object)
+					othSize += object.Size
 				}
 			}
 			sum++
@@ -111,15 +117,23 @@ func BucketsAllElement(context *gin.Context) {
 	}
 
 	context.JSON(200, gin.H{
-		"buckets":   bucketsInfoArray,
-		"all":       sum,
-		"images":    img,
-		"imagesNum": len(img),
-		"videos":    vid,
-		"videosNum": len(vid),
+		"buckets": bucketsInfoArray,
+		"all":     sum,
+
+		"images":     img,
+		"imagesNum":  len(img),
+		"imagesSize": util.FormatFileSize(imgSize),
+
+		"videos":     vid,
+		"videosNum":  len(vid),
+		"videosSize": util.FormatFileSize(vidSize),
+
 		"documents": doc,
 		"docNum":    len(doc),
-		"others":    oth,
-		"othNum":    len(oth),
+		"docSize":   util.FormatFileSize(docSize),
+
+		"others":  oth,
+		"othNum":  len(oth),
+		"othSize": util.FormatFileSize(othSize),
 	})
 }

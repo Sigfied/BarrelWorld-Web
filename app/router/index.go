@@ -33,6 +33,7 @@ func InitRouter(engine *gin.Engine) {
 			objectGroup.GET("/list", object.GetList)
 			objectGroup.GET("/one", object.GetOne)
 			objectGroup.GET("/stat", object.StatOne)
+			objectGroup.GET("/fuzzy", object.GetFuzzySearchList)
 		}
 		//Post请求路由
 		{
