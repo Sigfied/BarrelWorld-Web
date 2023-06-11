@@ -87,7 +87,8 @@ func PutOne(context *gin.Context, bucketName string, objectName string, filePath
 	if err != nil {
 		// Return an error response if object uploading fails
 		context.JSON(500, gin.H{
-			"error": err.Error(),
+			"error":  err.Error(),
+			"object": object,
 		})
 		return
 	}
@@ -95,6 +96,7 @@ func PutOne(context *gin.Context, bucketName string, objectName string, filePath
 	// Return a success response with the uploaded object information
 	context.JSON(200, gin.H{
 		"object": object,
+		"error":  nil,
 	})
 	err = os.Remove(filePath)
 	if err != nil {

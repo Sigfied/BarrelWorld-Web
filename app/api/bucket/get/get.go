@@ -16,12 +16,13 @@ func Create(context *gin.Context, name string) {
 	if err != nil {
 		config.Log.Info("Make Bucket Error :%v\n", err)
 		context.JSON(500, gin.H{
+			"flag":  false,
 			"error": err.Error(),
 		})
 	}
 	context.JSON(200, gin.H{
 		"flag":  true,
-		"error": err,
+		"error": nil,
 	})
 
 }

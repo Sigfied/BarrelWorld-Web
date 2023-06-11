@@ -5,16 +5,29 @@ import (
 	"BarrelWorld-Web/app/api/object/one"
 	"BarrelWorld-Web/config"
 	"github.com/gin-gonic/gin"
+	"github.com/minio/minio-go/v7"
 	"log"
 )
 
+type getRequest struct {
+	bucketName string
+	prefix     string
+}
+
 func GetList(context *gin.Context) {
 	name, flag := context.GetQuery("bucketName")
-	prefix, _ := context.GetQuery("prefix")
+	prefix, flag2 := context.GetQuery("prefix")
+	var data []minio.ObjectInfo
+	config.Log.Info("Name: %s", name)
 	if !flag {
 		context.JSON(400, gin.H{
-			"error": "BucketName is required",
+			"error":   "BucketName is required",
+			"objects": data,
 		})
+		return
+	}
+	if !flag2 {
+		prefix = ""
 	}
 	list.Objects(context, name, prefix)
 }

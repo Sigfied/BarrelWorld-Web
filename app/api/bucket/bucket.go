@@ -15,10 +15,10 @@ func CreateBucket(ctx *gin.Context) {
 	if !flag {
 		ctx.JSON(400, gin.H{
 			"error": "name is required",
+			"flag":  false,
 		})
 	}
 	get.Create(ctx, bucketName)
-	ctx.JSON(500, gin.H{})
 }
 
 func AllElement(ctx *gin.Context) {

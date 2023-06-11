@@ -13,17 +13,27 @@ func Objects(context *gin.Context, name string, prefix string) {
 	if err != nil {
 		exception.MinClientError(context, err)
 	}
-	objectInfos := client.ListObjects(context, name, minio.ListObjectsOptions{
-		WithMetadata: true,
-		Prefix:       prefix,
-		Recursive:    false,
-	})
 
 	var data []minio.ObjectInfo
-	for obj := range objectInfos {
-		data = append(data, obj)
+	config.Log.Info("name %v ,prefix %v", name, prefix)
+	if prefix != "" {
+		objectInfos := client.ListObjects(context, name, minio.ListObjectsOptions{
+			WithMetadata: true,
+			Prefix:       prefix,
+			Recursive:    false,
+		})
+		for obj := range objectInfos {
+			data = append(data, obj)
+		}
+	} else {
+		objectInfos := client.ListObjects(context, name, minio.ListObjectsOptions{
+			WithMetadata: true,
+			Recursive:    false,
+		})
+		for obj := range objectInfos {
+			data = append(data, obj)
+		}
 	}
-
 	context.JSON(200, gin.H{
 		"objects": data,
 		"error":   err,

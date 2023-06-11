@@ -120,20 +120,21 @@ func BucketsAllElement(context *gin.Context) {
 		"buckets": bucketsInfoArray,
 		"all":     sum,
 
-		"images":     img,
-		"imagesNum":  len(img),
-		"imagesSize": util.FormatFileSize(imgSize),
-
-		"videos":     vid,
-		"videosNum":  len(vid),
-		"videosSize": util.FormatFileSize(vidSize),
-
-		"documents": doc,
-		"docNum":    len(doc),
-		"docSize":   util.FormatFileSize(docSize),
-
-		"others":  oth,
-		"othNum":  len(oth),
-		"othSize": util.FormatFileSize(othSize),
+		"images":        img,
+		"imagesNum":     len(img),
+		"imagesSize":    util.FormatFileSize(imgSize),
+		"imagesSizeNum": imgSize,
+		"videos":        vid,
+		"videosNum":     len(vid),
+		"videosSize":    util.FormatFileSize(vidSize),
+		"videosSizeNum": vidSize,
+		"documents":     doc,
+		"docNum":        len(doc),
+		"docSize":       util.FormatFileSize(docSize),
+		"docSizeNum":    docSize,
+		"others":        oth,
+		"othNum":        len(oth),
+		"othSize":       util.FormatFileSize(othSize),
+		"othSizeNum":    othSize,
 	})
 }
